@@ -1,0 +1,41 @@
+include<iostream>
+using namespace std;
+int cnt=0;
+int n = 8;
+int* c;
+//首先实现八皇后放位过程
+void Queen(int row)
+{
+	if (row == n)//说明已经能放到最后一个皇后，说明此次方法正确，所以次数加1
+	{
+		cnt++;
+	}
+	else//说明皇后未放完，继续放皇后
+	{
+		for (int j = 0; j < n; j++)
+		{
+			c[row] = j;//表示第row行皇后放在第j列
+			if (is_ok(row))//判断第row行的皇后放在j列是否成立
+			{
+				Queen(row + 1);//如果第row行皇后放置位置成立，开始放置下一行皇后，如果不成立，尝试下一列
+			}
+		}
+	}
+}
+
+//判断row行皇后位置是否成立
+bool is_ok(int row)
+{
+	for (int j = 0; j < row; j++)//判断第row行皇后与前row-1个皇后是否同列或在对角线上(不可能同行，我们已经分行放置了)
+	{
+		if (c[row] == c[j] || j - row == c[j] - c[row] || j - row == c[row] == c[j])//同列即为第一个条件，同对角线即行与行之差的绝对值等于列与列差的绝对值
+		{
+			return false;
+		}
+	}
+	return true;
+}
+int main()
+{
+
+}
