@@ -1,0 +1,118 @@
+#include<iostream>
+#include<iomanip>
+using namespace std;
+//首先完成一个迷宫
+#define ROW 8
+#define COL 8
+int maze[ROW + 2][COL + 2] =
+{
+	1,1,1,1,1,1,1,1,1,1,
+	1,0,0,1,1,0,0,1,1,1,
+	1,1,0,1,1,0,1,1,1,1,
+	1,1,0,0,0,0,1,1,1,1,
+	1,0,0,1,1,1,1,1,1,1,
+	1,0,0,1,0,0,1,1,1,1,
+	1,1,0,0,0,1,1,1,1,1,
+	1,0,0,1,0,0,1,1,1,1,
+	1,1,1,1,1,0,0,0,0,1,
+	1,1,1,1,1,1,1,1,1,1
+};
+
+
+//创建数据域的结构体
+typedef struct box
+{
+	int x;
+	int y;
+	int dr;
+}box;
+
+//然后创建一个栈
+class Stack
+{
+private:
+	typedef struct Node
+	{
+		box data;
+		struct Node* next;
+	}Node,* Link;
+	Link top;
+public:
+	int count;
+	Stack();//构造函数
+	void push(box p);//压栈
+	box pop();//弹栈
+	bool isempty();//判断栈是否为空
+};
+
+
+//用枚举列列出四个方向
+enum dir{RIGHT,DOWN,LEFT,UP};
+
+//列出四个运动方向后的位置变化情况
+box dirt[4] = { {0,1,RIGHT},{0,-1,LEFT},{-1,0,UP},{1,0,DOWN } };
+
+//将移动方向转换为字符串
+string turn(int dir)
+{
+	if (dir == RIGHT) return "右";
+	if (dir == LEFT)  return "左";
+	if (dir == UP)    return "上";
+	if (dir == DOWN)  return "下";
+}
+//实现展示移动过程的函数
+ void display(int x, int y, int di,int count)
+{
+	 cout << "第" << setiosflags(ios::right) << setw(3) << count << " 次向" << turn(di) << "移动到(" << x << "," << y << ")" << endl;
+}
+
+//关键：实现路径函数
+bool findpath(int maze[ROW+2][COL+2],box dirt[4],Stack& s)
+{
+	box tem = { 1,1,-1 };
+	maze[1][1] = -1;
+	s.push(tem);
+	int x, y, di;
+	int row, col;
+	while (!s.isempty())
+	{
+		tem = s.pop();
+		x = tem.x;
+		y = tem.y;
+		di = tem.dr+1;
+		while (di < 4)
+		{
+			row = x + dirt[di].x;
+			col = y + dirt[di].y;
+			if (maze[row][col] == 0)
+			{
+				tem = { x,y,di };
+				s.push(tem);
+				x = row;
+				y = col;
+				display(x, y, di, s.count);
+				maze[x][y] = -1;
+				if (x ==ROW && y == COL)
+				{
+					return true;
+				}
+				else
+				{
+					di = 0;
+				}
+			}
+			else
+			{
+				di++;
+			}
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	Stack a;
+	findpath(maze, dirt, a);
+	return 0;
+}

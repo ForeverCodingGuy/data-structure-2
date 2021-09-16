@@ -1,0 +1,44 @@
+#include"FindPath.h"
+//构造函数
+Stack::Stack()
+{
+	count = 0;
+	top =new Node;
+	if (top)
+	{
+		top->next = nullptr;
+	}
+}
+
+//压栈
+void Stack::push(box p)
+{
+	Link tem = new Node;
+	tem->data = p;
+	tem->next = top;
+	top = tem;
+	count++;
+}
+
+//弹栈
+box Stack::pop()
+{
+	if (!isempty())
+	{
+		box q = top->data;
+		Link s = top;
+		top = top->next;
+		delete s;
+		s = nullptr;
+		count--;
+		return q;
+	}
+}
+
+//判断栈是否为空
+bool Stack::isempty()
+{
+	if (top->next == nullptr)
+		return true;
+	return false;
+}
