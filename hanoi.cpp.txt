@@ -1,0 +1,22 @@
+#include<iostream>
+using namespace std;
+void haoni(int n, char A, char B, char C)
+{
+	if (n == 1)
+	{
+		cout << "将" << n << "盘从" << A << "盘移到" << C << "盘"<<endl;
+	}
+	else
+	{
+		haoni(n - 1, A, C, B);
+		cout << "将" << n << "盘从" << A << "盘移到" << C << "盘" << endl;
+		haoni(n - 1, B, A, C);
+	}
+}
+int main()
+{
+	int n;
+	cin >> n;
+	haoni(n, 'a', 'b', 'c');
+	return 0;
+}
