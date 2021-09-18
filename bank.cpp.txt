@@ -1,0 +1,144 @@
+#include"bank.h"
+//LinkQueue
+//构造函数
+LinkQueue::LinkQueue()
+{
+	front = new Node;
+	if (front)
+	{
+		rear = front;
+		len = 0;
+	}
+}
+//入队函数
+void LinkQueue::push(Client x)
+{
+	Node*p = new Node;
+	p->data = x;
+	rear->next = p;
+	rear = p;
+	p->next = nullptr;
+	len++;
+}
+//出队
+void LinkQueue::pop(Client* c)
+{
+	if (!isempty())
+	{
+		Node* q = front->next;
+		c->arrivaltime = q->data.arrivaltime;
+		c->duration = q->data.duration;
+		front->next = q->next;
+		delete q;
+		q = nullptr;
+	}
+}
+//判断队列是否为空
+bool LinkQueue::isempty()
+{
+	if (len == 0)
+	{
+		return true;
+	}
+	return true;
+}
+//获取队头元素
+void LinkQueue::get_front(Client* c)
+{
+	if (!isempty())
+	{
+		*c = front->next->data;
+	}
+}
+//排队人数
+int LinkQueue::queuelen()
+{
+	return len;
+}
+//显示
+void LinkQueue::displayQueue()
+{
+	Node* p = front->next;
+	while (p)
+	{
+		cout << "[" << p->data.arrivaltime << "," << p->data.duration << "," << (((p->next) == nullptr) ? '^' : '-');
+		p = p->next;
+		if (p)
+		{
+			cout << "->";
+		}
+	}
+}
+//析构
+LinkQueue::~LinkQueue()
+{
+	Node* p = front;
+	while (p->next)
+	{
+		p = p->next;
+		Node* tem = p;
+		delete tem;
+		tem = nullptr;
+	}
+}
+
+//evLink
+//初始化
+evList::evList()
+{
+	head = new evNode;
+	head->next = nullptr;
+}
+//判断是否为空
+bool evList::isempty()
+{
+	if (head->next == nullptr)
+	{
+		return true;
+	}
+	return false;
+}
+//插入事件(按时间顺序)
+void evList::push(evNode v)
+{
+	evNode* p = head;
+	evNode* tem = new evNode(v);
+	while (p->next)
+	{
+		if (v.occurtime < p->next->occurtime)
+		{
+			tem->next = p->next;
+			p->next = tem;
+			break;
+		}
+	}
+	p->next = tem;
+	tem->next = nullptr;
+}
+//删除第一个事件
+void evList::pop(evNode* q)
+{
+	*q = *(head->next);
+	evNode* tem = head->next;
+	head->next = tem->next;
+	delete tem;
+	tem = nullptr;
+}
+//打印事件
+void evList::display()
+{
+	evNode* p = head->next;
+	while (p)
+	{
+		if (p == head->next)
+		{
+			cout << "显示事件表:";
+		}
+		cout << "[" << p->occurtime << "," << p->nType <<"," << (((p->next) == nullptr) ? '^' : '-') << "]";
+		p = p->next;
+		if (p)
+		{
+			cout << "->";
+		}
+	}
+}

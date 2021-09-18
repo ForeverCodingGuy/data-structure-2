@@ -1,0 +1,145 @@
+#include<iostream>
+using namespace std;
+#define CLOSE_TIME 40//定义银行关门时间
+//实现客户的结构体(包含到达时间与接收服务时间）
+typedef struct Client
+{
+	int arrivaltime;
+	int duration;
+}Client;
+//实现队列结点
+typedef struct Node
+{
+	Client data;
+	struct Node* next;
+};
+//实现队列
+class LinkQueue
+{
+private:
+	Node* front, *rear;
+	int len;
+public:
+	LinkQueue();//构造函数
+	void push(Client x);//入队
+	bool isempty();//判断队列是否为空
+	void pop(Client*c);
+	void get_front(Client* c);
+	int queuelen();//排队人数
+	void displayQueue();
+	~LinkQueue();
+};
+
+
+//实现事件结点(即发生时间和窗口位置)
+typedef struct evNode
+{
+	int occurtime;
+	int nType;//-1是到达。0-3表示4个窗口的离开
+	struct evNode* next;
+}evNode;
+//实现事件链表
+class evList
+{
+private:
+	evNode* head;
+public:
+	evList();//初始化
+	bool isempty();//判断是否为空
+	void push(evNode v);//插入事件
+	void pop(evNode* p);//删除第一个事件
+	void display();//打印事件
+};
+
+//查找人数最少队伍
+ int FindQueue(LinkQueue * p, int x)
+{
+	 int min = 0;
+	 for (int i = 0; i < x-1; i++)
+	 {
+		 if (p[i].queuelen() < p[i + 1].queuelen())
+		 {
+			 min = i;
+		 }
+	 }
+	 return min;
+}
+
+//开始银行系统的实现
+double simulation()
+{
+	int totaltime = 0;
+	int totalcust = 0;
+	Client c;
+	int durtime, intertime;//接收服务时间和下一个客户到来的时间间隔
+	LinkQueue queue[4];
+	evList evl;
+	evNode evltem, evlTmp;
+	srand((unsigned)time(nullptr));
+	evltem.occurtime = 0;
+	evltem.nType = -1;
+	evltem.next = nullptr;
+	evl.push(evltem);
+	int i = 0;
+	cout << "初始化事件列表" << endl;
+	evl.display();
+	while (!evl.isempty())
+	{
+		i++;
+		cout << "----------第" << i << "次循环----------" << endl;
+		evl.pop(&evltem);
+		cout << "删除事件链表中第一个结点存入evltem";
+		cout << "[" << evltem.occurtime << "," << evltem.nType <<"," << (((evltem.next) == nullptr) ? '^' : '-') << endl;
+		evl.display();
+		if (evltem.nType == -1)
+		{
+			totalcust++;
+			cout << "是新客户到达事件，请输入durtime,intertime:";
+			cin >> durtime >> intertime;
+			cout << durtime << "," << intertime << endl;
+			if (evltem.occurtime + intertime < CLOSE_TIME)
+			{
+				evlTmp.occurtime = evltem.occurtime + intertime;
+				evlTmp.nType = -1;
+				evl.push(evlTmp);
+			}
+			int min = FindQueue(queue, 4);
+			c.arrivaltime = evltem.occurtime;
+			c.duration = durtime;
+			queue[min].push(c);
+			cout << "新客户进入人数最少的队伍:queue" << min << endl;
+			queue[min].displayQueue();
+			if (queue[min].queuelen() == 1)
+			{
+				evltem.occurtime = c.arrivaltime + c.duration;
+				evltem.nType = min;
+				evl.push(evltem);
+				cout << "设定第一个客户离开银行的事件，插入事件表" << endl;
+				evl.display();
+			}
+		}
+		else
+		{
+			int lef = evltem.nType;
+			queue[lef].pop(&c);
+			cout << "将当前要离开的客户从队列中删除，" << (c.arrivaltime, c.duration) << endl;
+			totaltime = totaltime + c.duration;
+			cout << "totaltime=" << totaltime << endl;
+			if (queue[lef].queuelen()!= 0)
+			{
+				queue[lef].get_front(&c);
+				evlTmp.occurtime = c.arrivaltime + c.duration;
+				evlTmp.nType = lef;
+				evl.push(evlTmp);
+				cout << "如果还有人在排队，则把队头客户的离开事件插入事件表" << endl;
+			}
+		}
+	}
+	cout << "totaltime=" << totaltime << "," << "totalcust=" << totalcust << endl;
+	return totaltime * 1.0 / totalcust;
+}
+int main()
+{
+	cout << "银行客户评价逗留时间为" << simulation();
+	return 0;
+}
