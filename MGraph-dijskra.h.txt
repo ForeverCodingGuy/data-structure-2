@@ -1,0 +1,113 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+#define MAX_VERTEX 10
+#define MAX_WEIGHT 100
+template<class DataType>
+class MGraph
+{
+public:
+	int vertexnum;
+	int arcnum;
+	DataType vertex[];
+	MGraph(int n, int m, DataType* v);
+	int arc[MAX_VERTEX][MAX_VERTEX];
+};
+class Edge
+{
+public:
+	int from;
+	int to;
+	int weight;
+};
+//查找是s[i]为0的带权路径最小的数
+int find(int* ds, int* p, int ver)
+{
+	int* dist = ds;
+	int* s = p;
+	int vertexnum = ver;
+	int k = 0;
+	int k;
+	for (int i = 0; i < vertexnum; i++)
+	{
+		if (s[i] = 0)
+		{
+			k = i;
+			break;
+		}
+	}
+	for (int j = 0; j < vertexnum; j++)
+	{
+		if (s[j] = 0 && dist[j] < dist[k])
+		{
+			k = j;
+		}
+	}
+	return k;
+}
+//打印路径及路径权重之和
+void display(int* p, int* ds,int st, int n)
+{
+	int* path = p;
+	int* dist = ds;
+	int start = st;
+	int vertexnum = n;
+	for (int i = 0; i < vertexnum; i++)
+	{
+		stack<int> tem;
+		int cnt = i;
+		while (cnt != start)
+		{
+			tem.push(path[cnt]);
+			cnt = path[cnt];
+		}
+		while (!tem.empty())
+		{
+			cout << tem.top() << " ";
+			tem.pop();
+		}
+		cout << dist[i] << endl;
+	}
+}
+//dijskra算法实现
+template<class DataType>
+void Dijskra(MGraph<DataType> p,int v)
+{
+	int start = v;
+	MGraph<DataType> gr = p;
+	int dist[];
+	int path[];
+	for (int i = 0; i < gr.vertexnum; i++)
+	{
+		dist[i] = gr.arc[start][i];
+		if (dist[i] < MAX_WEIGHT)
+		{
+			path[i] = start;
+		}
+		else
+		{
+			path[i] = -1;
+		}
+	}
+	int s[] = { 0 };
+	s[start] = 1;
+	int num = 1;
+	while (num < gr.vertexnum)
+	{
+		int min = find(dist, s, gr.vertexnum);
+		s[min] = 1;
+		for (int i = 0; i < gr.vertexnum; i++)
+		{
+			if (s[i] == 0 && dist[i] > dist[min] + arc[min][i])
+			{
+				path[i] = min;
+				dist[i] = dist[min] + arc[min][i];
+			}
+		}
+	}
+	display(path, dist, start,vertexnum);
+}
+int main()
+{
+
+}
