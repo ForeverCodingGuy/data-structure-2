@@ -1,0 +1,22 @@
+#include"EdgeGraph.h"
+template<class DataType>
+MGraph<DataType>::MGraph(int n, int m, DataType* v)
+{
+	vertexnum = n;
+	arcnum = m;
+	for (int i = 0; i < vertexnum; i++)
+	{
+		vertex[i] = v[i];
+	}
+	for (int j = 0; j < arcnum; j++)
+	{
+		for (int k = 0; k < arcnum; k++)
+		{
+			int weight;
+			int x, y;
+			cin >> x >> y >> weight;
+			arc[x][y] = weight;
+			arc[y][x] = weight;
+		}
+	}
+}

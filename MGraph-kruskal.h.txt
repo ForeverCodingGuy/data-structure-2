@@ -1,0 +1,94 @@
+#include<iostream>
+using namespace std;
+#define MAX_VERTEX 10
+template<class DataType>
+class MGraph
+{
+public:
+	int vertexnum;
+	int arcnum;
+	DataType vertex[];
+	MGraph(int n, int m, DataType* v);
+	int arc[MAX_VERTEX][MAX_VERTEX];
+};
+class Edge
+{
+public:
+	int from;
+	int to;
+	int weight;
+};
+//排序函数
+void sortEdge(Edge* e,int m)
+{
+	Edge* edge = e;
+	int arcnum = m;
+	for (int i = 0; i < arcnum; i++)
+	{
+		for (int j = i; j < arcnum; j++)
+		{
+			if (edge[i].weight > edge[j].weight)
+			{
+				edge[i].from = edge[j].from;
+				edge[i].to = edge[j].to;
+				edge[i].weight = edge[j].weight;
+			}
+		}
+	}
+}
+//寻找所在根
+int findroot(int* p, int k)
+{
+	int* parent = p;
+	int n = k;
+	while (parent[n] != -1)
+	{
+		n = parent[n];
+	}
+	return n;
+}
+//打印路径
+void outputMST(Edge k)
+{
+	cout << "(" << k.from << "," << k.to << ")" << k.weight << endl;
+}
+//kruskal算法实现
+template<class DataType>
+void kruskal(MGraph<DataType> v)
+{
+	int parent[];
+	for (int i = 0; i < v.vertexnum; i++)
+	{
+		parent[i] = -1;
+	}
+	Edge edge[];
+	for (int j = 0; j < arcnum; j++)
+	{
+		int x, int y, weight;
+		edge[j].from = x;
+		edge[j].to = y;
+		edge[j].weight = weight;
+	}
+	//将edge按路径权重大小排序
+	sortEdge(edge，arcnum);
+	int num = 0;
+	for (int k = 0; k < v.arcnum; k++)
+	{
+		int vex1 = findroot(parent, edge[k].from);
+		int vex2 = findroot(parent, edge[k].to);
+		if (vex1 != vex2)
+		{
+			outputMST(edge[k]);
+			num++;
+			parent[vex2] = vex1;
+			if (num == v.vertexnum - 1)
+			{
+				return;
+			}
+		}
+	}
+}
+int main()
+{
+
+}
