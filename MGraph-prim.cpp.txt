@@ -1,0 +1,23 @@
+#include"MGraph.h"
+template<class DataType>
+MGraph<DataType>::MGraph(DataType v[], int n, int m)
+{
+	for (int i = 0; i < n; i++)
+	{
+		vertex[i] = v[i];
+	}
+	for (int j = 0; j < m; j++)
+	{
+		for (int k = 0; k < vertexnum; k++)
+		{
+			arc[j][k] = 0;
+		}
+	}
+	for (int m = 0; m < arcnum; m++)
+	{
+		int i, j, len;
+		cin >> i >> j >> len;
+		arc[i][j] = len;
+		arc[j][i] = len;
+	}
+}

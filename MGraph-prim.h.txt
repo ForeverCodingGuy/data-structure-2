@@ -1,0 +1,68 @@
+#include<iostream>
+using namespace std;
+#define MAX_VERTEX 10
+template<class DataType>
+class MGraph
+{
+public:
+	int vertexnum;
+	int arcnum;
+	DataType vertex[MAX_VERTEX];
+	int arc[MAX_VERTEX][MAX_VERTEX];
+	MGraph(DataType v[], int n, int m);
+};
+class edge
+{
+public:
+	int adjvex;
+	int lowcost;
+};
+//找最短边的邻接点
+int minEdge(edge* shortEdge, int num)
+{
+	int k = 0;
+	int cost = 1000;
+	for (int i = 0; i < num; i++)
+	{
+		if (shortEdge[i].lowcost < cost && shortEdge[i].lowcost != 0)
+		{
+			k = i;
+			cost = shortEdge[i].lowcost;
+		}
+	}
+	return k;
+}
+void outputSMT(int k, edge tem)
+{
+	cout << "(" << tem.adjvex << "," << k << ")" << tem.lowcost;
+}
+//prim算法
+template<class DataType>
+void Prim(MGraph<DataType> G, int start)
+{
+	edge shortEdge[] = { 0 };
+	for (int i = 0; i < G.vertexnum; i++)
+	{
+		shortEdge[i].adjvex = start;
+		shortEdge[i].lowcost = G.arc[start][i];
+	}
+	shortEdge[start].lowcost = 0;
+	for (int j = 0; j < G.vertexnum - 1; j++)
+	{
+		int k = minEdge(shortEdge, G.vertexnum);
+		outputSMT(k, shortEdge[k]);
+		shortEdge[k].lowcost = 0;
+		for (int m = 0; m < G.vertexnum; m++)
+		{
+			if (G.arc[k][m] < shortEdge[m])
+			{
+				shortEdge[m].adjvex = k;
+				shortEdge[m].lowcost = G.arc[k][m];
+			}
+		}
+	}
+}
+int main()
+{
+
+}
