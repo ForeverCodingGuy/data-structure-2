@@ -1,0 +1,87 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+//边表
+class edge
+{
+public:
+	int seq;
+	edge* next;
+};
+//顶点表
+template<class DataType>
+class vertexNode
+{
+public:
+	int in;//入度
+	DataType vertex;
+	edge* firstEdge;
+};
+//邻接表
+template<class DataType>
+class ALGraph
+{
+public:
+	vertexNode<DataType> adjlist[];
+	int vertexnum;
+	int arcnum;
+	ALGraph(DataType* ds, int v, int a);
+};
+//查找vertex对应数组下标
+template<class DataType>
+int find(ALGraph<DataType>* ag, DataType dt)
+{
+	DataType tem = dt;
+	for (int i = 0; i < ag->vertexnum; i++)
+	{
+		if (ag->adjlist[i].vertex == tem)
+		{
+			return i;
+		}
+	}
+}
+//拓扑排序
+template<class DataType>
+void TopoSort(ALGraph<DataType>* a)
+{
+	DataType* ag = a;
+	stack<DataType> topo;
+	int count = 0;
+	for (int i = 0; i < ag->vertexnum; i++)
+	{
+		if (ag->djlist[i].in == 0)
+		{
+			topo.push(ag->adjlist[i].vertex);
+		}
+	}
+	while (!topo.empty())
+	{
+		DataType tem = topo.top();
+		topo.pop();
+		count++;
+		cout << tem << " ";
+		int vi = find(ag, tem);
+		edge* p = ag->adjlist[vi].firstEdge;
+		while (p)
+		{
+			adjlist[p->seq].in--;
+			p = p->next;
+		}
+		for (int i = 0; i < ag->vertexnum; i++)
+		{
+			if (ag->djlist[i].in == 0)
+			{
+				topo.push(ag->adjlist[i].vertex);
+			}
+		}
+	}
+	if (counyt < ag->vertexnum)
+	{
+		cout << endl;
+		cout << "有回路";
+	}
+}
+int main()
+{
+
+}

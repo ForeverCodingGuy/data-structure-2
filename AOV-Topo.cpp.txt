@@ -1,0 +1,25 @@
+#include"ALGraph-AOV.H"
+//邻接表初始化
+template<class DataType>
+ALGraph<DataType>::ALGraph(DataType* ds, int v, int a)
+{
+	DataType* ts = ds;
+	vertexnum = v;
+	arcnum = a;
+	for (int i = 0; i < vertexnum; i++)
+	{
+		adjlist[i].vertex = ts[i];
+		adjlist[i].next = nullptr;
+		adjlist[i].in = 0;
+	}
+	for (int j = 0; j < arcnum; j++)
+	{
+		int vi, int vj;
+		cin >> vi >> vj;
+		adjlist[vj].in++;
+		edge* tem = new edge;
+		tem->seq = vj;
+		tem->next = adjlist[vi].firstEdge;
+		adjlist[vi].firstEdge = tem;
+	}
+}
