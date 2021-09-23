@@ -1,0 +1,68 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+#define MAX_VERTEX 10
+#define MAX_WEIGHT 100
+template<class DataType>
+class MGraph
+{
+public:
+	int vertexnum;
+	int arcnum;
+	DataType vertex[];
+	MGraph(int n, int m, DataType* v);
+	int arc[MAX_VERTEX][MAX_VERTEX];
+};
+//florid算法实现
+template<class DataType>
+void florid(MGraph<DataType> g)
+{
+	string path[MAX_VERTEX][MAX_VERTEX];
+	int dist[MAX_VERTEX][MAX_VERTEX];
+	MGraph<DataType> gr = g;
+	for (int i = 0; i < gr.vertexnum; i++)
+	{
+		for (int j = 0; j < gr.vertexnum; j++)
+		{
+			dist[i][j] = gr.arc[i][j];
+			if (dist[i][j] < MAX_WEIGHT)
+			{
+				path[i][j] = gr.vertex[i] + gr.vertexnum[j];
+			}
+			else
+			{
+				path[i][j] = " ";
+			}
+		}
+	}
+	for (int k = 0; k < gr.vertexnum; i++)
+	{
+		for (int i = 0; i < gr.vertexnum; i++)
+		{
+			for (int j = 0; j < gr.vertexnum; j++)
+			{
+				if (dist[i][k] + dist[k][j] < dist[i][j])
+				{
+					dist[i][j] = dist[i][k] + dist[k][j];
+					path[i][j] = path[i][k] + path[k][j];
+				}
+			}
+		}
+	}
+	display(path, dist,gr);
+}
+//打印路径与权重
+template<class DataType>
+void display(string pa[][MAX_VERTEX],int*ds,MGraph<DataType> g)
+{
+	string* path = pa;
+	int dist = ds;
+	MGraph<DataType> gr = g;
+	for (int i < 0; i < gr.vertexnum; i++)
+	{
+		for (int j = 0; j < gr.vertexnum; j++)
+		{
+			cout << "路径：" << path[i][j] << " 路径权重：" << dist[i][j] << endl;
+		}
+	}
+}
